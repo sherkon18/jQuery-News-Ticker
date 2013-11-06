@@ -1,0 +1,60 @@
+<html>
+<head>
+<!--using google feed api for an rss feed with jquery ticker -->
+
+<!-- load css style sheet -->
+  <link rel="stylesheet" href="css/ticker-style.css" type="text/css" />
+
+/* Loading javaScript API ( google feed api no api key necessary) */
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script language="javascript" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+ 
+ <!-- script for google feed api and news ticker -->
+ <!-- //////////////////// news ticker /////////////////////////// -->
+  <script tyle="text/javascript">
+  //load feed api
+    google.load("feeds", "1");
+  // callback function, for when a feed is loaded.
+function feedLoaded(result) {
+  if (!result.error) {
+    // Grab the container we will put the results into
+    var container = document.getElementById("js-news");
+    container.innerHTML = '';/
+
+    // Loop through the feeds, putting the titles onto the page.
+    // Check out the result object for a list of properties returned in each entry.
+    // http://code.google.com/apis/ajaxfeeds/documentation/reference.html#JSON
+    for (var i = 0; i < result.feed.entries.length; i++) {
+      var entry = result.feed.entries[i];
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode("CNN Tech: "));
+      li.appendChild(document.createTextNode(entry.title + " "));
+      li.appendChild(document.createTextNode("Published on: " + entry.publishedDate));
+      container.appendChild(li);
+    }
+    $(function () {
+        $(container).ticker({
+            speed: 0.10,
+            htmlFeed: true,
+            fadeInSpeed: 600,
+            pauseOnItem: 3000,
+            titleText: 'Latest News'
+        });
+    });
+  }
+}
+  function OnLoad() {
+  // Create a feed instance that will grab CNN Tech RSS FEED
+  var feed = new google.feeds.Feed("http://rss.cnn.com/rss/cnn_tech.rss");
+
+  // Calling load sends the request off.  It requires a callback function.
+  feed.load(feedLoaded);
+}
+google.setOnLoadCallback(OnLoad);
+   
+</script>
+ </head>
+ <body>
+ <ul id="js-news" class="js-hidden"></ul>
+ </body>
+</html> 
